@@ -9,8 +9,8 @@
     "otcathatsya"
   ],
   "contact": {
-    "homepage": "https://github.com/otcathatsya",
-    "sources": "https://github.com/"
+    "homepage": "https://cath.at/",
+    "sources": "https://github.com/otcathatsya/wynn-raid-relay"
   },
 
   "license": "CC0-1.0",
@@ -34,9 +34,7 @@
     "fabric-api": "*",
     "minecraft": "~${minecraft_version}",
     "java": ">=21",
-    "fabric-language-kotlin": ">=${fabric_kotlin_version}"
-  },
-  "suggests": {
-    "another-mod": "*"
+    "fabric-language-kotlin": ">=${fabric_kotlin_version}",
+    "cloth-config2": ">=${cloth_config_version}"
   }
 }
