@@ -1,5 +1,5 @@
 {
-  "raidreporter.webhook": "Webhook URL",
+  "raidreporter.url": "RaidRelay Server URL",
   "raidreporter.title": "Raid Reporter",
   "raidreporter.category": "General",
   "raidreporter.settings": "Settings"
