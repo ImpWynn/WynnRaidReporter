@@ -5,7 +5,7 @@ jobs:
   build:
     strategy:
       matrix:
-        java: [17]  # You may want to consider adding Java 21 if your project supports it
+        java: [21]
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -32,7 +32,7 @@ jobs:
         run: ./gradlew build
 
       - name: Capture Build Artifacts
-        if: ${{ runner.os == 'Linux' && matrix.java == '17' }}
+        if: ${{ runner.os == 'Linux' && matrix.java == '21' }}
         uses: actions/upload-artifact@v3
         with:
           name: Artifacts
