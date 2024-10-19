@@ -1,5 +1,9 @@
 # Wynn Raid Reporter
-Simple fabric client mod that relays any Wynncraft guild raid completion to a discord webhook configured via in-game settings.
-Feel free to suggest changes! Requires [Cloth Config](https://modrinth.com/mod/cloth-config/versions).
 
+Simple fabric client mod that relays any Wynncraft guild raid completion to a discord webhook via a
+[simple Ktor server](https://github.com/otcathatsya/wynn-raid-relay).<br>
+You will need to install the server and enter the URL via this mod's in-game settings.
+Also requires [Cloth Config](https://modrinth.com/mod/cloth-config/versions).
+
+Feel free to suggest changes or improvements!<br>
 ![img.png](src/main/resources/assets/imp/imgs/discord_sample.png)

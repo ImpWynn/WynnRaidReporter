@@ -1,0 +1,3 @@
+[submodule "wynn-raid-relay"]
+	path = wynn-raid-relay
+	url = https://github.com/otcathatsya/wynn-raid-relay.git
