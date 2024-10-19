@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "raid-reporter",
+  "version": "${version}",
+
+  "name": "Raid Reporter",
+  "description": "Broadcast your guild raids to discord via webhook!",
+  "authors": [
+    "otcathatsya"
+  ],
+  "contact": {
+    "homepage": "https://github.com/otcathatsya",
+    "sources": "https://github.com/"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/imp/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "at.cath.RaidReporter"
+      }
+    ]
+  },
+  "mixins": [
+    "imp.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=21",
+    "fabric-language-kotlin": ">=${fabric_kotlin_version}"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

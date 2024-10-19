@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "at.cath.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+  ],
+  "client": [
+    "MixinMessageIntercept"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
