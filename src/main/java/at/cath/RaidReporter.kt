@@ -59,6 +59,7 @@ object RaidReporter : ModInitializer {
         "Orphion's Nexus of Light",
         "Nest of the Grootslangs"
     )
+    private val raidKeywords = raidNames.map { it.substringAfterLast(" ", "") }.toList()
 
     override fun onInitialize() {
         ClientLifecycleEvents.CLIENT_STARTED.register(ClientLifecycleEvents.ClientStarted {
@@ -105,11 +106,15 @@ object RaidReporter : ModInitializer {
             for (sibling in message.siblings) {
                 val msgStr = sibling.string
                 when (sibling.style.color?.hexCode) {
+                    // add player name
                     "#FFFF55" -> raidParticipants.add(msgStr)
+                    // check for raid keyword match
                     "#00AAAA" -> {
-                        raidNames.find { it == msgStr }?.let {
-                            raidName = it
+                        if (raidKeywords.size != 4) break
+                        raidName = raidKeywords.withIndex().find { msgStr.contains(it.value) }?.let {
+                            raidNames.getOrNull(it.index)
                         }
+                        if (raidName != null) break
                     }
                 }
             }
