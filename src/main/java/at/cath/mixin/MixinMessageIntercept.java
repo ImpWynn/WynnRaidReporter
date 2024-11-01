@@ -1,6 +1,6 @@
 package at.cath.mixin;
 
-import at.cath.AnyClientMessageEvent;
+import at.cath.events.AnyClientMessageEvent;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.network.message.MessageSignatureData;
