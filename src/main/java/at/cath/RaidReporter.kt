@@ -93,7 +93,7 @@ object RaidReporter : ModInitializer {
                     CONFIG_PATH.createFile()
                 }
                 CONFIG_PATH.writeText(newValue)
-                client.player?.sendMessage(Text.of("Successfully set relay server URL!"))
+                client.player?.sendMessage(Text.of("Successfully set relay server URL!"), false)
             }
             .build())
 

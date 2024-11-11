@@ -10,7 +10,7 @@
   ],
   "contact": {
     "homepage": "https://cath.at/",
-    "sources": "https://github.com/otcathatsya/wynn-raid-reporter"
+    "sources": "https://github.com/ImpWynn/wynn-raid-reporter"
   },
 
   "license": "CC0-1.0",
@@ -35,6 +35,7 @@
     "minecraft": "~${minecraft_version}",
     "java": ">=21",
     "fabric-language-kotlin": ">=${fabric_kotlin_version}",
-    "cloth-config2": ">=${cloth_config_version}"
+    "cloth-config2": ">=${cloth_config_version}",
+    "autoupdatelib": ">=1.0"
   }
 }
