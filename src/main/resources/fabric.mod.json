@@ -36,6 +36,6 @@
     "java": ">=21",
     "fabric-language-kotlin": ">=${fabric_kotlin_version}",
     "cloth-config2": ">=${cloth_config_version}",
-    "autoupdatelib": ">=1.0"
+    "autoupdatelib": ">=1.0.0"
   }
 }
