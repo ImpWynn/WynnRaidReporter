@@ -12,6 +12,7 @@ version = property("mod_version")!!
 repositories {
     maven { url = uri("https://maven.shedaniel.me/") }
     maven { url = uri("https://maven.terraformersmc.com/releases/") }
+    maven { url = uri("https://jitpack.io") }
 
 }
 
@@ -31,10 +32,11 @@ dependencies {
     modApi("me.shedaniel.cloth:cloth-config-fabric:${property("cloth_config_version")}") {
         exclude(group = "net.fabricmc.fabric-api")
     }
+
+    include(modImplementation("com.github.ImpWynn:AutoUpdateLib:${property("autoupdate_version")}")!!)
 }
 
 tasks {
-
     processResources {
         inputs.property("version", project.version)
         filesMatching("fabric.mod.json") {
