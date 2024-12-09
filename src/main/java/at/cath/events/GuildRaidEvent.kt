@@ -2,6 +2,8 @@ package at.cath.events
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import net.minecraft.client.MinecraftClient
+import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
 
 @Serializable
@@ -9,7 +11,8 @@ data class GuildRaid(
     @Transient
     override val rawMsg: Text = Text.of(""),
     val raidType: String,
-    val players: List<String>
+    val players: List<String>,
+    val reporterUuid: String
 ) : WynnEvent
 
 private val raidNames = listOf(
@@ -31,7 +34,11 @@ class GuildRaidMatcher : EventMatcher<GuildRaid> {
             val msgStr = sibling.string
             when (sibling.style.color?.hexCode) {
                 // add player name
-                "#FFFF55" -> raidParticipants.add(msgStr)
+                "#FFFF55" -> {
+                    // check for renamed players
+                    val hoverText = sibling.style.hoverEvent?.getValue(HoverEvent.Action.SHOW_TEXT)
+                    hoverText?.let { raidParticipants.add(it.string) } ?: raidParticipants.add(msgStr)
+                }
                 // check for raid keyword match
                 "#00AAAA" -> {
                     if (raidKeywords.size != 4) break
@@ -43,6 +50,8 @@ class GuildRaidMatcher : EventMatcher<GuildRaid> {
             }
         }
 
-        return raidName?.let { GuildRaid(message, it, raidParticipants) }
+        val raidReporter =
+            MinecraftClient.getInstance().player?.uuidAsString ?: throw IllegalStateException("Player UUID is null")
+        return raidName?.let { GuildRaid(message, it, raidParticipants, raidReporter) }
     }
 }

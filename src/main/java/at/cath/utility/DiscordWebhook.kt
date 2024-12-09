@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.ClassDiscriminatorMode
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -15,14 +16,17 @@ import java.io.IOException
 
 class DiscordWebhook(val url: String) {
     companion object {
-        private val JSON = "application/json".toMediaType()
+        private val JSON_TYPE = "application/json".toMediaType()
+
+        // remove polymorphic serialization type because it messes up w ignoreUnknownKeys = false
+        private val json = Json { classDiscriminatorMode = ClassDiscriminatorMode.NONE }
         private val client = OkHttpClient()
         private val coroutineScope = CoroutineScope(Dispatchers.IO)
         private val logger = LogManager.getLogger()
     }
 
     fun send(payload: WynnEvent) {
-        val body = Json.encodeToString(payload).toRequestBody(JSON)
+        val body = json.encodeToString(payload).toRequestBody(JSON_TYPE)
         val request = Request.Builder()
             .url(url)
             .post(body)
