@@ -29,10 +29,6 @@ dependencies {
     include(implementation("com.squareup.okhttp3:okhttp")!!)
     include(implementation("com.squareup.okio:okio-jvm:${property("okio_jvm_version")}")!!)
 
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${property("cloth_config_version")}") {
-        exclude(group = "net.fabricmc.fabric-api")
-    }
-
     include(modImplementation("com.github.ImpWynn:AutoUpdateLib:${property("autoupdate_version")}")!!)
 }
 

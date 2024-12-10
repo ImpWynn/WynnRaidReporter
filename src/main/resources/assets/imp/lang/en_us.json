@@ -1,6 +1,6 @@
 {
-  "raidreporter.url": "RaidRelay Server URL",
+  "raidreporter.promptUrl": "RaidRelay Server URL",
   "raidreporter.title": "Raid Reporter",
-  "raidreporter.category": "General",
+  "raidreporter.confirmUrl": "Confirm URL",
   "raidreporter.settings": "Settings"
 }
