@@ -40,7 +40,7 @@ class DiscordWebhook(val url: String) {
                     }
                 }
             }.onFailure {
-                logger.error("Failed to send webhook payload to $url: $it.message")
+                logger.error("Failed to send webhook payload to $url: ${it.message}")
             }.onSuccess {
                 logger.info("Successfully sent webhook payload to $url")
             }
