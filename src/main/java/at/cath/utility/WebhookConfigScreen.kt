@@ -51,6 +51,7 @@ class WebhookConfigScreen(private val parent: Screen?) : Screen(Text.translatabl
             20,
             Text.translatable("raidreporter.promptUrl")
         )
+        promptField.setMaxLength(Int.MAX_VALUE)
         promptField.text = CONFIG_PATH.takeIf { it.exists() }?.readText() ?: ""
         addDrawableChild(promptField)
 
