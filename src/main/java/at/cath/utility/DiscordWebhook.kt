@@ -14,7 +14,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.apache.logging.log4j.LogManager
 import java.io.IOException
 
-class DiscordWebhook(val url: String) {
+class DiscordWebhook(private val url: String) {
     companion object {
         private val JSON_TYPE = "application/json".toMediaType()
 

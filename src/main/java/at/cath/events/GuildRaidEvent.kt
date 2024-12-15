@@ -1,5 +1,6 @@
 package at.cath.events
 
+import at.cath.RaidReporter.logger
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import net.minecraft.client.MinecraftClient
@@ -37,18 +38,27 @@ class GuildRaidMatcher : EventMatcher<GuildRaid> {
                 "#FFFF55" -> {
                     // check for renamed players
                     val hoverText = sibling.style.hoverEvent?.getValue(HoverEvent.Action.SHOW_TEXT)
-                    hoverText?.let { raidParticipants.add(it.string) } ?: raidParticipants.add(msgStr)
+                    val hoverName = hoverText?.siblings?.last()?.string
+                        ?.substringAfterLast(" ", hoverText.string) ?: hoverText?.string
+                    if (hoverName == null) {
+                        logger.error("Found nickname but could not determine hover name")
+                        break
+                    }
+                    hoverText?.let { raidParticipants.add(hoverName) } ?: raidParticipants.add(msgStr)
                 }
                 // check for raid keyword match
                 "#00AAAA" -> {
-                    if (raidKeywords.size != 4) break
                     raidName = raidKeywords.withIndex().find { msgStr.contains(it.value) }?.let {
                         raidNames.getOrNull(it.index)
                     }
+
                     if (raidName != null) break
                 }
             }
         }
+
+        if (raidParticipants.size != 4)
+            return null
 
         val raidReporter =
             MinecraftClient.getInstance().player?.uuidAsString ?: throw IllegalStateException("Player UUID is null")
