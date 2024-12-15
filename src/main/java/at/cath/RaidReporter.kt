@@ -66,7 +66,6 @@ object RaidReporter : ModInitializer {
         WynnEventDispatcher.EVENT.register { event ->
             when (event) {
                 is GuildRaid -> {
-                    println("inc")
                     webhook?.send(event) ?: run {
                         logger.warn("No webhook set, skipping raid completion")
                     }

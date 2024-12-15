@@ -29,6 +29,13 @@ class GuildRaidMatcher : EventMatcher<GuildRaid> {
 
     companion object {
         const val DEBUG = false
+
+        private fun extractHoverName(msg: Text): String? {
+            val hoverText = msg.style.hoverEvent?.getValue(HoverEvent.Action.SHOW_TEXT) ?: return null
+            val hoverName = hoverText.string.substringAfterLast(" ", msg.string)
+            if (DEBUG) logger.info("Found hover text: $hoverText, extracted name: $hoverName")
+            return hoverName
+        }
     }
 
     override fun parse(message: Text): GuildRaid? {
@@ -41,11 +48,7 @@ class GuildRaidMatcher : EventMatcher<GuildRaid> {
                 // add player name
                 "#FFFF55" -> {
                     // check for renamed players
-                    val hoverText = sibling.style.hoverEvent?.getValue(HoverEvent.Action.SHOW_TEXT)
-                    if (DEBUG) logger.info("Found hover text: $hoverText")
-                    val hoverName = hoverText?.siblings?.last()?.string
-                        ?.substringAfterLast(" ", hoverText.string) ?: hoverText?.string
-                    hoverName?.let { raidParticipants.add(hoverName) } ?: raidParticipants.add(msgStr)
+                    extractHoverName(sibling)?.let { raidParticipants.add(it) } ?: raidParticipants.add(msgStr)
                 }
                 // check for raid keyword match
                 "#00AAAA" -> {
@@ -64,7 +67,6 @@ class GuildRaidMatcher : EventMatcher<GuildRaid> {
 
         val playerUuid =
             MinecraftClient.getInstance().player?.uuidAsString ?: throw IllegalStateException("Player UUID is null")
-        logger.info("Found raid '$raidName' with participants $raidParticipants")
         return GuildRaid(message, raidName, raidParticipants, playerUuid)
 
     }
