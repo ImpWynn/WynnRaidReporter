@@ -32,7 +32,7 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
-    "minecraft": "~${minecraft_version}",
+    "minecraft": "~${minecraft_version_range_compat}",
     "java": ">=21",
     "fabric-language-kotlin": ">=${fabric_kotlin_version}",
     "autoupdatelib": ">=1.0.0"
