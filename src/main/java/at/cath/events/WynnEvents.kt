@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.EventFactory
 import net.minecraft.text.Text
-import net.minecraft.util.ActionResult
 
 
 @Serializable
@@ -37,7 +36,6 @@ fun interface WynnEventDispatcher {
                 for (listener in listeners) {
                     listener.onWynnEvent(event)
                 }
-                ActionResult.PASS
             }
         }
     }

@@ -3,7 +3,7 @@ package at.cath.events
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.EventFactory
 import net.minecraft.text.Text
-import net.minecraft.util.ActionResult
+
 
 fun interface AnyClientMessageEvent {
 
@@ -15,7 +15,6 @@ fun interface AnyClientMessageEvent {
                 for (listener in listeners) {
                     listener.onMessage(message)
                 }
-                ActionResult.PASS
             }
         }
     }
