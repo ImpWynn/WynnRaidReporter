@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.ClassDiscriminatorMode
 import kotlinx.serialization.json.Json
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -26,9 +27,16 @@ class DiscordWebhook(private val url: String) {
     }
 
     fun send(payload: WynnEvent) {
+        val validUrl = url.toHttpUrlOrNull()
+
+        if (validUrl == null) {
+            logger.error("Invalid URL provided, skipping request: $url")
+            return
+        }
+
         val body = json.encodeToString(payload).toRequestBody(JSON_TYPE)
         val request = Request.Builder()
-            .url(url)
+            .url(validUrl)
             .post(body)
             .build()
 
@@ -40,9 +48,9 @@ class DiscordWebhook(private val url: String) {
                     }
                 }
             }.onFailure {
-                logger.error("Failed to send webhook payload to $url: ${it.message}")
+                logger.error("Failed to send webhook payload to $validUrl: ${it.message}")
             }.onSuccess {
-                logger.info("Successfully sent webhook payload to $url")
+                logger.info("Successfully sent webhook payload to $validUrl")
             }
         }
     }
