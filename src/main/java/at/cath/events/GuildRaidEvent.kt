@@ -4,7 +4,6 @@ import at.cath.RaidReporter.logger
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import net.minecraft.client.MinecraftClient
-import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
 
 @Serializable
@@ -13,7 +12,9 @@ data class GuildRaid(
     override val rawMsg: Text = Text.of(""),
     val raidType: String,
     val players: List<String>,
-    val reporterUuid: String
+    val reporterUuid: String,
+    val gxpGained: String,
+    val srGained: Int
 ) : WynnEvent
 
 private val raidNames = listOf(
@@ -22,52 +23,38 @@ private val raidNames = listOf(
     "Orphion's Nexus of Light",
     "Nest of the Grootslangs"
 )
-private val raidKeywords = raidNames.map { it.substringAfterLast(" ", "") }.toList()
 
+private val raidNamePattern = raidNames.joinToString("|") { Regex.escape(it) }
+private val raidPattern = Regex(
+    """^(.+) finished ($raidNamePattern) and claimed 2x Aspects, 2048x Emeralds, \+([\d.]+[mk]?) Guild Experience, and \+(\d+) Seasonal Rating$"""
+)
 
 class GuildRaidMatcher : EventMatcher<GuildRaid> {
 
     companion object {
-        const val DEBUG = false
-
-        private fun extractHoverName(msg: Text): String? {
-            val hoverText = msg.style.hoverEvent?.getValue(HoverEvent.Action.SHOW_TEXT) ?: return null
-            val hoverName = hoverText.string.substringAfterLast(" ", msg.string)
-            if (DEBUG) logger.info("Found hover text: $hoverText, extracted name: $hoverName")
-            return hoverName
-        }
+        const val DEBUG = true
     }
 
-    override fun parse(message: Text): GuildRaid? {
-        val raidParticipants = mutableListOf<String>()
-        var raidName: String? = null
+    override fun parse(message: String): GuildRaid? {
+        if (message.contains(':')) return null
 
-        for (sibling in message.siblings) {
-            val msgStr = sibling.string
-            when (sibling.style.color?.hexCode) {
-                // add player name
-                "#FFFF55" -> {
-                    // check for renamed players
-                    extractHoverName(sibling)?.let { raidParticipants.add(it) } ?: raidParticipants.add(msgStr)
-                }
-                // check for raid keyword match
-                "#00AAAA" -> {
-                    raidName = raidKeywords.withIndex().find { msgStr.contains(it.value) }?.let {
-                        raidNames.getOrNull(it.index)
-                    }
-                    // no need to scan the rest of the message if we found the raid name
-                    if (raidName != null) break
-                }
-            }
-        }
+        val match = raidPattern.find(message) ?: return null
+        val (playersStr, raidName, gxp, seasonalRating) = match.destructured
 
-        if (raidName == null) return null
-        if (DEBUG) logger.info("Raid '$raidName' found with participants: $raidParticipants, original message: $message")
-        if (raidParticipants.size != 4) return null
+        val raidParticipants = playersStr.replace(", and ", ", ").split(", ")
 
         val playerUuid =
             MinecraftClient.getInstance().player?.uuidAsString ?: throw IllegalStateException("Player UUID is null")
-        return GuildRaid(message, raidName, raidParticipants, playerUuid)
 
+        if (DEBUG) logger.info("Raid '$raidName' found with participants: $raidParticipants (+$seasonalRating SR, +$gxp GXP), original message: $message")
+
+        return GuildRaid(
+            players = raidParticipants,
+            raidType = raidName,
+            reporterUuid = playerUuid,
+            gxpGained = gxp,
+            srGained = seasonalRating.toInt()
+        )
     }
+
 }

@@ -12,7 +12,7 @@ sealed interface WynnEvent {
 }
 
 fun interface EventMatcher<T : WynnEvent> {
-    fun parse(message: Text): T?
+    fun parse(message: String): T?
 }
 
 object WynnEventRegistry {
@@ -22,7 +22,7 @@ object WynnEventRegistry {
         matchers[eventClass] = matcher
     }
 
-    fun matchEvent(message: Text): WynnEvent? = matchers.firstNotNullOfOrNull { (_, matcher) ->
+    fun matchEvent(message: String): WynnEvent? = matchers.firstNotNullOfOrNull { (_, matcher) ->
         matcher.parse(message)
     }
 }

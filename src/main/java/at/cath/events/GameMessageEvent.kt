@@ -2,16 +2,15 @@ package at.cath.events
 
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.EventFactory
-import net.minecraft.text.Text
 
 
-fun interface AnyClientMessageEvent {
+fun interface GameMessageEvent {
 
     companion object {
-        val EVENT: Event<AnyClientMessageEvent> = EventFactory.createArrayBacked(
-            AnyClientMessageEvent::class.java
+        val EVENT: Event<GameMessageEvent> = EventFactory.createArrayBacked(
+            GameMessageEvent::class.java
         ) { listeners ->
-            AnyClientMessageEvent { message ->
+            GameMessageEvent { message ->
                 for (listener in listeners) {
                     listener.onMessage(message)
                 }
@@ -19,5 +18,5 @@ fun interface AnyClientMessageEvent {
         }
     }
 
-    fun onMessage(message: Text)
+    fun onMessage(message: String)
 }

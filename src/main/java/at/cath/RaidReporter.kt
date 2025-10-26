@@ -57,7 +57,7 @@ object RaidReporter : ModInitializer {
         register(GuildRaid::class.java, GuildRaidMatcher())
 
         // hook up event matchers to incoming chat
-        AnyClientMessageEvent.EVENT.register { message ->
+        GameMessageEvent.EVENT.register { message ->
             WynnEventDispatcher.EVENT.invoker().onWynnEvent(
                 WynnEventRegistry.matchEvent(message) ?: return@register
             )
