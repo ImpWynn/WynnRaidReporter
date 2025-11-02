@@ -26,7 +26,7 @@ private val raidNames = listOf(
 
 private val raidNamePattern = raidNames.joinToString("|") { Regex.escape(it) }
 private val raidPattern = Regex(
-    """^(.+) finished ($raidNamePattern) and claimed 2x Aspects, 2048x Emeralds, \+([\d.]+[mk]?) Guild Experience, and \+(\d+) Seasonal Rating$"""
+    """^(.+) finished ($raidNamePattern) and claimed 2x Aspects\s*,\s*2048x Emeralds\s*,\s*(?:and )?\+([\d.]+[mk]?) Guild Experience(?:\s*,\s*and \+(\d+) Seasonal Rating)?$"""
 )
 
 class GuildRaidMatcher : EventMatcher<GuildRaid> {
@@ -53,7 +53,7 @@ class GuildRaidMatcher : EventMatcher<GuildRaid> {
             raidType = raidName,
             reporterUuid = playerUuid,
             gxpGained = gxp,
-            srGained = seasonalRating.toInt()
+            srGained = seasonalRating.toIntOrNull() ?: 0 // SR can be empty in off-season
         )
     }
 
