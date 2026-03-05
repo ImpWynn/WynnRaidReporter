@@ -6,6 +6,7 @@ import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextFieldWidget
+import net.minecraft.client.input.KeyInput
 import net.minecraft.text.Style
 import net.minecraft.text.Text
 import org.lwjgl.glfw.GLFW
@@ -86,11 +87,12 @@ class WebhookConfigScreen(private val parent: Screen?) : Screen(Text.translatabl
         context.drawText(textRenderer, titleText, titleX, titleY, 0xff0049, true)
     }
 
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        if (keyCode == GLFW.GLFW_KEY_ENTER) {
-            doneButton.onPress()
+    override fun keyPressed(input: KeyInput): Boolean {
+        if (input.keycode == GLFW.GLFW_KEY_ENTER) {
+            doneButton.onPress(input)
             return true
         }
-        return promptField.keyPressed(keyCode, scanCode, modifiers) || super.keyPressed(keyCode, scanCode, modifiers)
+        return promptField.keyPressed(input) || super.keyPressed(input)
     }
+
 }

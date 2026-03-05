@@ -30,10 +30,9 @@ public class MixinMessageIntercept {
         HoverEvent hoverEvent = style.getHoverEvent();
         if (hoverEvent == null) return null;
 
-        Text hoverText = hoverEvent.getValue(HoverEvent.Action.SHOW_TEXT);
-        if (hoverText == null) return null;
+        if (!(hoverEvent instanceof HoverEvent.ShowText(Text value))) return null;
 
-        String hoverString = hoverText.getString();
+        String hoverString = value.getString();
         int lastSpaceIndex = hoverString.lastIndexOf(' ');
 
         String hoverName;

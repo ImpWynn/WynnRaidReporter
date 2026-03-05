@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.util.InputUtil
+import net.minecraft.util.Identifier
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.lwjgl.glfw.GLFW
@@ -31,7 +32,7 @@ object RaidReporter : ModInitializer {
             "raidreporter.settings",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_K,
-            "raidreporter.title"
+            KeyBinding.Category(Identifier.of("raidreporter", "title")),
         )
     )
 
