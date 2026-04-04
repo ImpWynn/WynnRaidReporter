@@ -1,7 +1,7 @@
 package at.cath.utility
 
+import at.cath.RaidReporter
 import at.cath.RaidReporter.CONFIG_PATH
-import at.cath.RaidReporter.webhook
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.widget.ButtonWidget
@@ -17,7 +17,8 @@ import kotlin.io.path.readText
 import kotlin.io.path.writeText
 
 
-class WebhookConfigScreen(private val parent: Screen?) : Screen(Text.translatable("raidreporter.title")) {
+class WebhookConfigScreen(val raidMod: RaidReporter, private val parent: Screen?) :
+    Screen(Text.translatable("raidreporter.title")) {
     private lateinit var promptField: TextFieldWidget
     private lateinit var doneButton: ButtonWidget
 
@@ -56,18 +57,20 @@ class WebhookConfigScreen(private val parent: Screen?) : Screen(Text.translatabl
         promptField.text = CONFIG_PATH.takeIf { it.exists() }?.readText() ?: ""
         addDrawableChild(promptField)
 
-        doneButton = ButtonWidget.builder(Text.translatable("raidreporter.confirmUrl"), {
+        doneButton = ButtonWidget.builder(Text.translatable("raidreporter.confirmUrl")) {
             val newValue = promptField.text.trim()
-            webhook = DiscordWebhook(newValue)
+            raidMod.webhook = DiscordWebhook(newValue)
             if (!CONFIG_PATH.exists()) {
                 Files.createDirectories(CONFIG_PATH.parent)
                 CONFIG_PATH.createFile()
             }
 
             CONFIG_PATH.writeText(newValue)
-            client?.player?.sendMessage(Text.of("Successfully set relay server URL!"), false)
+
+            raidMod.updateRaidNames(newValue)
+
             close()
-        }).dimensions(width / 2 - 50, height / 2 + 20, 100, 20).build();
+        }.dimensions(width / 2 - 50, height / 2 + 20, 100, 20).build()
 
         addDrawableChild(doneButton)
     }

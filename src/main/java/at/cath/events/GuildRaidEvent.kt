@@ -17,19 +17,22 @@ data class GuildRaid(
     val srGained: Int
 ) : WynnEvent
 
-private val raidNames = listOf(
-    "The Canyon Colossus",
-    "The Nameless Anomaly",
-    "Orphion's Nexus of Light",
-    "Nest of the Grootslangs"
-)
 
-private val raidNamePattern = raidNames.joinToString("|") { Regex.escape(it) }
-private val raidPattern = Regex(
-    """^(.+) finished ($raidNamePattern) and claimed 2x Aspects\s*,\s*2048x Emeralds\s*,\s*(?:and )?\+([\d.]+[mk]?) Guild Experience(?:\s*,\s*and \+(\d+) Seasonal Rating)?$"""
-)
+class GuildRaidMatcher(raidNames: List<String>) : EventMatcher<GuildRaid> {
 
-class GuildRaidMatcher : EventMatcher<GuildRaid> {
+    private var raidPattern: Regex? = null
+
+    init {
+        updatePattern(raidNames)
+    }
+
+    fun updatePattern(raidNames: List<String>) {
+        if (raidNames.isEmpty()) return
+        val raidNamePattern = raidNames.joinToString("|") { Regex.escape(it) }
+        raidPattern = Regex(
+            """^(.+) finished ($raidNamePattern) and claimed 2x Aspects\s*,\s*2048x Emeralds\s*,\s*(?:and )?\+([\d.]+[mk]?) Guild Experience(?:\s*,\s*and \+(\d+) Seasonal Rating)?$"""
+        )
+    }
 
     companion object {
         const val DEBUG = true
@@ -38,7 +41,9 @@ class GuildRaidMatcher : EventMatcher<GuildRaid> {
     override fun parse(message: String): GuildRaid? {
         if (message.contains(':')) return null
 
-        val match = raidPattern.find(message) ?: return null
+        val pattern = raidPattern ?: return null
+        val match = pattern.find(message) ?: return null
+
         val (playersStr, raidName, gxp, seasonalRating) = match.destructured
 
         val raidParticipants = playersStr.replace(", and ", ", ").split(", ")

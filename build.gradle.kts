@@ -25,10 +25,6 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin_version")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
 
-    include(implementation(enforcedPlatform("com.squareup.okhttp3:okhttp-bom:${property("okhttp_bom_version")}"))!!)
-    include(implementation("com.squareup.okhttp3:okhttp")!!)
-    include(implementation("com.squareup.okio:okio-jvm:${property("okio_jvm_version")}")!!)
-
     include(modImplementation("com.github.ImpWynn:AutoUpdateLib:${property("autoupdate_version")}")!!)
 }
 
