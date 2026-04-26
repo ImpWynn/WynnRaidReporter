@@ -48,11 +48,21 @@ public class MixinMessageIntercept {
     @Inject(method = "onGameMessage", at = @At("TAIL"))
     public void onGameMessage(GameMessageS2CPacket packet, CallbackInfo ci) {
         StringBuilder stringBuilder = new StringBuilder();
+
+        String[] lastHoverName = new String[1];
+
         packet.content().visit((style, string) -> {
             String hoverName = extractHoverName(string, style);
 
-            if (hoverName != null) stringBuilder.append(hoverName);
-            else stringBuilder.append(string);
+            if (hoverName != null) {
+                if (!hoverName.equals(lastHoverName[0])) {
+                    stringBuilder.append(hoverName);
+                    lastHoverName[0] = hoverName;
+                }
+            } else {
+                stringBuilder.append(string);
+                lastHoverName[0] = null;
+            }
 
             return Optional.empty();
         }, Style.EMPTY);
