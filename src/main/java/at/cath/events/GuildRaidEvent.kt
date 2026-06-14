@@ -30,7 +30,7 @@ class GuildRaidMatcher(raidNames: List<String>) : EventMatcher<GuildRaid> {
         if (raidNames.isEmpty()) return
         val raidNamePattern = raidNames.joinToString("|") { Regex.escape(it) }
         raidPattern = Regex(
-            """^(.+) finished ($raidNamePattern) and claimed 2x Aspects\s*,\s*2048x Emeralds\s*,\s*(?:and )?\+([\d.]+[mk]?) Guild Experience(?:\s*,\s*and \+(\d+) Seasonal Rating)?$"""
+            """^(.+) finished ($raidNamePattern) and claimed (?:[12]x Aspects\s*,\s*)?(\d+)x Emeralds\s*,\s*(?:and )?\+([\d.]+[mk]?) Guild Experience(?:\s*,\s*and \+(\d+) Seasonal Rating)?$"""
         )
     }
 
@@ -44,14 +44,13 @@ class GuildRaidMatcher(raidNames: List<String>) : EventMatcher<GuildRaid> {
         val pattern = raidPattern ?: return null
         val match = pattern.find(message) ?: return null
 
-        val (playersStr, raidName, gxp, seasonalRating) = match.destructured
+        val (playersStr, raidName, emeraldsStr, gxp, seasonalRating) = match.destructured
 
         val raidParticipants = playersStr.replace(", and ", ", ").split(", ")
-
         val playerUuid =
             MinecraftClient.getInstance().player?.uuidAsString ?: throw IllegalStateException("Player UUID is null")
 
-        if (DEBUG) logger.info("Raid '$raidName' found with participants: $raidParticipants (+$seasonalRating SR, +$gxp GXP), original message: $message")
+        if (DEBUG) logger.info("Raid '$raidName' found with participants: $raidParticipants ($emeraldsStr emeralds, +$seasonalRating SR, +$gxp GXP), original message: $message")
 
         return GuildRaid(
             players = raidParticipants,
